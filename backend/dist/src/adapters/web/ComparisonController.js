@@ -23,8 +23,6 @@ class ComparisonController {
                 baseline: cleanBaseline,
                 comparisons: comparisonData.comparisons
             };
-            console.log('=== FINAL RESPONSE ===');
-            console.log(JSON.stringify(response, null, 2));
             res.json(response);
         }
         catch (error) {

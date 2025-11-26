@@ -1,17 +1,26 @@
-
-import React, { useState } from 'react';
+// src/pages/RoutesTab.tsx - FIXED error handling
+import React, { useState, useEffect } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../components/Card';
 import { RoutesTable } from '../components/Routes/RoutesTable';
 import { RouteFilters } from '../components/Routes/RouteFilters';
 import { useRoutes, useSetBaseline } from '../hooks/useRoutes';
 import { RouteFilters as Filters } from '../core/entities/Route';
+import { Button } from '../components/Button';
+import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export const RoutesTab: React.FC = () => {
   const [filters, setFilters] = useState<Filters>({});
   const [settingBaseline, setSettingBaseline] = useState<string | null>(null);
 
-  const { data: routes = [], isLoading, error } = useRoutes(filters);
+  const { data: routes = [], isLoading, error, refetch } = useRoutes(filters);
   const setBaselineMutation = useSetBaseline();
+
+  // Log the exact error details
+  useEffect(() => {
+    if (error) {
+      console.error('❌ Routes Error Details:', error);
+    }
+  }, [error]);
 
   const handleSetBaseline = async (routeId: string) => {
     setSettingBaseline(routeId);
@@ -38,10 +47,17 @@ export const RoutesTab: React.FC = () => {
 
         <Card>
           <CardContent>
-            <div className="text-center py-8 text-red-600">
-              <div className="text-4xl mb-4">⚠️</div>
-              <h3 className="text-lg font-medium mb-2">Failed to load routes</h3>
-              <p>Please check if the backend server is running.</p>
+            <div className="text-center py-8">
+              <div className="text-4xl mb-4">❌</div>
+              <h3 className="text-lg font-medium text-gray-900 mb-2">
+                Failed to Load Routes
+              </h3>
+              <p className="text-gray-600 mb-4">
+                {error.message}
+              </p>
+              <Button onClick={() => refetch()} variant="primary">
+                Try Again
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -68,9 +84,7 @@ export const RoutesTab: React.FC = () => {
         <CardHeader>
           <CardTitle className="flex items-center justify-between">
             <span>Vessel Routes ({routes.length})</span>
-            <div className="text-sm font-normal text-gray-500">
-              {routes.find(r => r.isBaseline) ? 'Baseline set' : 'No baseline set'}
-            </div>
+            {isLoading && <LoadingSpinner size="sm" />}
           </CardTitle>
         </CardHeader>
         <CardContent className="p-0">
@@ -82,43 +96,8 @@ export const RoutesTab: React.FC = () => {
           />
         </CardContent>
       </Card>
-
-      {/* Stats Summary */}
-      {routes.length > 0 && !isLoading && (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mt-6">
-          <Card padding="sm">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-maritime-600">{routes.length}</div>
-              <div className="text-sm text-gray-600">Total Routes</div>
-            </div>
-          </Card>
-          <Card padding="sm">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-green-600">
-                {routes.filter(r => r.isBaseline).length}
-              </div>
-              <div className="text-sm text-gray-600">Baseline Routes</div>
-            </div>
-          </Card>
-          <Card padding="sm">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-gray-700">
-                {new Set(routes.map(r => r.vesselType)).size}
-              </div>
-              <div className="text-sm text-gray-600">Vessel Types</div>
-            </div>
-          </Card>
-          <Card padding="sm">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">
-                {new Set(routes.map(r => r.year)).size}
-              </div>
-              <div className="text-sm text-gray-600">Years</div>
-            </div>
-          </Card>
-        </div>
-      )}
     </div>
   );
 };
-export {}
+
+export {};

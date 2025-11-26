@@ -79,14 +79,9 @@ class PrismaRouteRepository {
             totalEmissions: baselineRoute.totalEmissions,
             isBaseline: baselineRoute.isBaseline
         });
-        console.log('=== COMPARISON CALCULATION DEBUG ===');
-        console.log('Baseline GHG:', baselineRoute.ghgIntensity);
-        console.log('Target:', TARGET);
-        console.log('Number of comparison routes:', allRoutes.length);
         const comparisons = allRoutes.map((route) => {
             const percentDiff = ((route.ghgIntensity / baselineRoute.ghgIntensity) - 1) * 100;
             const compliant = route.ghgIntensity <= TARGET;
-            console.log(`Route ${route.routeId}: GHG=${route.ghgIntensity}, percentDiff=${percentDiff.toFixed(2)}, compliant=${compliant}`);
             return {
                 routeId: route.routeId,
                 vesselType: route.vesselType,
@@ -101,7 +96,6 @@ class PrismaRouteRepository {
                 compliant
             };
         });
-        console.log('=== END DEBUG ===');
         return { baseline, comparisons };
     }
 }

@@ -1,7 +1,8 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+// Use absolute URL for development
+const API_BASE_URL = 'http://localhost:3001'
 
 export const httpClient = axios.create({
   baseURL: API_BASE_URL,
@@ -11,20 +12,22 @@ export const httpClient = axios.create({
   },
 });
 
-// Request interceptor for logging
+httpClient.defaults.withCredentials = false;
+
 httpClient.interceptors.request.use(
   (config) => {
-    console.log(`🚀 ${config.method?.toUpperCase()} ${config.url}`);
+    console.log(`${config.method?.toUpperCase()} ${config.url}`);
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Response interceptor for error handling
 httpClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    console.error('💥 API Error:', error.response?.data || error.message);
+    if (error.code === 'ECONNREFUSED') {
+      console.error('Backend server is not running. Please start the backend server on port 3001.');
+    }
     return Promise.reject(error);
   }
 );

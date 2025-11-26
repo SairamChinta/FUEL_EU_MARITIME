@@ -1,26 +1,21 @@
-
-import { RouteService } from '../ports/RouteService';
-import { ComplianceService } from '../ports/ComplianceService';
+// src/adapters/serviceFactory.ts - ADD DEBUG LOGS
 import { ApiRouteService } from './ApiRouteService';
 import { ApiComplianceService } from './ApiComplianceService';
 
-class ServiceFactory {
-  private static routeService: RouteService;
-  private static complianceService: ComplianceService;
+console.log('🔧 serviceFactory: Importing ApiRouteService');
+const routeService = new ApiRouteService();
+console.log('✅ serviceFactory: ApiRouteService created');
 
-  static getRouteService(): RouteService {
-    if (!this.routeService) {
-      this.routeService = new ApiRouteService();
-    }
-    return this.routeService;
-  }
+console.log('🔧 serviceFactory: Importing ApiComplianceService');
+const complianceService = new ApiComplianceService();
+console.log('✅ serviceFactory: ApiComplianceService created');
 
-  static getComplianceService(): ComplianceService {
-    if (!this.complianceService) {
-      this.complianceService = new ApiComplianceService();
-    }
-    return this.complianceService;
-  }
-}
+export const getRouteService = () => {
+  console.log('🔧 getRouteService called');
+  return routeService;
+};
 
-export const { getRouteService, getComplianceService } = ServiceFactory;
+export const getComplianceService = () => {
+  console.log('🔧 getComplianceService called');
+  return complianceService;
+};

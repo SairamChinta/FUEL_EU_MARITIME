@@ -14,7 +14,7 @@ export interface ComparisonRoute {
 }
 
 export interface RouteRepository {
-  findAll(): Promise<Route[]>;
+  findAll(filters?: { vesselType?: string; fuelType?: string; year?: number }): Promise<Route[]>;
   findById(routeId: string): Promise<Route | null>;
   setBaseline(routeId: string): Promise<Route>;
   getComparisonData(): Promise<{

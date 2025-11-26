@@ -1,6 +1,5 @@
 import express from 'express';
 import cors from 'cors';
-import helmet from 'helmet';//@ts-ignore
 import { RouteController } from '../adapters/web/RouteController';
 import { ComplianceController } from '../adapters/web/ComplianceController';
 import { ComparisonController } from '../adapters/web/ComparisonController';
@@ -9,8 +8,7 @@ import { PoolController } from '../adapters/web/PoolController';
 
 const app = express();
 
-app.use(helmet());
-app.use(cors());
+app.use(cors()); 
 app.use(express.json());
 
 app.get('/health', (req, res) => {
@@ -28,5 +26,5 @@ app.post('/pools', PoolController.createPool);
 const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(` Server running on port ${PORT}`);
 });
