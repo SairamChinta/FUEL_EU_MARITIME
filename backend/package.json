@@ -1,6 +1,6 @@
 {
   "name": "fuel-eu-backend",
-  "version": "1.0.0",
+  "version": "1.0.0", 
   "type": "commonjs",
   "scripts": {
     "dev": "tsx watch src/server.ts",
@@ -12,6 +12,9 @@
     "db:push": "prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.7.0",
