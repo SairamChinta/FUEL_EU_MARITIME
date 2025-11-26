@@ -4,6 +4,7 @@ import helmet from 'helmet';//@ts-ignore
 import { RouteController } from '../adapters/web/RouteController';
 import { ComplianceController } from '../adapters/web/ComplianceController';
 import { ComparisonController } from '../adapters/web/ComparisonController';
+import { BankingController } from '../adapters/web/BankingController';
 
 const app = express();
 
@@ -19,6 +20,8 @@ app.get('/routes', RouteController.getRoutes);
 app.post('/routes/:routeId/baseline', RouteController.setBaseline);
 app.get('/compliance/calculate', ComplianceController.calculateCompliance);
 app.get('/routes/comparison', ComparisonController.getComparison);
+app.post('/banking/bank', BankingController.bankSurplus);
+app.get('/banking/records', BankingController.getBankRecords);
 
 const PORT = process.env.PORT || 3001;
 

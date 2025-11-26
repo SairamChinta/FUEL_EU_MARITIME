@@ -1,6 +1,5 @@
 import { ComplianceBalance } from '../../core/entities/ComplianceBalance';
 import { ComplianceRepository } from '../../ports/ComplianceRepository';
-//@ts-ignore
 import { prisma } from '../../infrastructure/database';
 
 export class PrismaComplianceRepository implements ComplianceRepository {
@@ -35,5 +34,22 @@ export class PrismaComplianceRepository implements ComplianceRepository {
       compliance.year,
       compliance.cbGCO2eq
     );
+  }
+
+  async getAdjustedComplianceBalance(shipId: string, year: number): Promise<ComplianceBalance> {
+    const baseBalance = await this.getComplianceBalance(shipId, year);
+    
+    if (!baseBalance) {
+      throw new Error(`No compliance balance found for ship ${shipId} in year ${year}`);
+    }
+
+    const bankedAmount = await prisma.bankEntry.aggregate({
+      where: { shipId, year },
+      _sum: { amountGCO2eq: true }
+    });
+
+    const adjustedCB = baseBalance.cbGCO2eq - (bankedAmount._sum.amountGCO2eq || 0);
+
+    return new ComplianceBalance(shipId, year, adjustedCB);
   }
 }
