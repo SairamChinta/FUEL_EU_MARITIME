@@ -1,25 +1,40 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
+import { QueryClientProvider } from '@tanstack/react-query';
+import { ErrorBoundary } from './components/ErrorBoundary';
+import { DashboardLayout } from './components/Layout/DashboardLayout';
+import { queryClient } from './infrastructure/query-client';
+import { RoutesTab } from './pages/RoutesTab';
+import { CompareTab } from './pages/CompareTab';
+import { BankingTab } from './pages/BankingTab';
+import { PoolingTab } from './pages/PoolingTab';
 import './App.css';
 
 function App() {
+  const [activeTab, setActiveTab] = useState<string>('routes');
+
+  const renderActiveTab = () => {
+    switch (activeTab) {
+      case 'routes':
+        return <RoutesTab />;
+      case 'compare':
+        return <CompareTab />;
+      case 'banking':
+        return <BankingTab />;
+      case 'pooling':
+        return <PoolingTab />;
+      default:
+        return <RoutesTab />;
+    }
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ErrorBoundary>
+      <QueryClientProvider client={queryClient}>
+        <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab}>
+          {renderActiveTab()}
+        </DashboardLayout>
+      </QueryClientProvider>
+    </ErrorBoundary>
   );
 }
 
