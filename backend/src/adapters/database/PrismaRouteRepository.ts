@@ -1,5 +1,5 @@
 import { Route } from '../../core/entities/Route';
-import { RouteRepository } from '../../ports/RouteRepository';
+import { RouteRepository, ComparisonRoute } from '../../ports/RouteRepository';
 import { prisma } from '../../infrastructure/database';
 
 export class PrismaRouteRepository implements RouteRepository {
@@ -65,7 +65,7 @@ export class PrismaRouteRepository implements RouteRepository {
 
   async getComparisonData(): Promise<{
     baseline: Route;
-    comparisons: Array<Route & { percentDiff: number; compliant: boolean }>;
+    comparisons: ComparisonRoute[];
   }> {
     const TARGET = 89.3368;
     
@@ -93,8 +93,11 @@ export class PrismaRouteRepository implements RouteRepository {
       isBaseline: baselineRoute.isBaseline
     });
 
-    const comparisons = allRoutes.map((route: any) => {
-      const routeEntity = new Route({
+    const comparisons: ComparisonRoute[] = allRoutes.map((route: any) => {
+      const percentDiff = ((route.ghgIntensity / baselineRoute.ghgIntensity) - 1) * 100;
+      const compliant = route.ghgIntensity <= TARGET;
+
+      return {
         routeId: route.routeId,
         vesselType: route.vesselType,
         fuelType: route.fuelType,
@@ -103,18 +106,12 @@ export class PrismaRouteRepository implements RouteRepository {
         fuelConsumption: route.fuelConsumption,
         distance: route.distance,
         totalEmissions: route.totalEmissions,
-        isBaseline: route.isBaseline
-      });
-
-      const percentDiff = ((route.ghgIntensity / baselineRoute.ghgIntensity) - 1) * 100;
-      const compliant = route.ghgIntensity <= TARGET;
-
-      return Object.assign(routeEntity, {
+        isBaseline: route.isBaseline,
         percentDiff: Number(percentDiff.toFixed(2)),
         compliant
-      });
+      };
     });
-
+  
     return { baseline, comparisons };
   }
 }

@@ -10,6 +10,10 @@ export class CreatePool {
   ) {}
 
   async execute(year: number, shipIds: string[]): Promise<Pool> {
+    if (shipIds.length < 2) {
+      throw new Error('At least 2 ships are required to create a pool');
+    }
+
     const members = await Promise.all(
       shipIds.map(async shipId => {
         const balance = await this.complianceRepository.getAdjustedComplianceBalance(shipId, year);

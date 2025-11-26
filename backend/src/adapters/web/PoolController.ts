@@ -16,9 +16,12 @@ export class PoolController {
       if (!year || !shipIds || !Array.isArray(shipIds)) {
         return res.status(400).json({ error: 'year and shipIds array are required' });
       }
+      console.log('Creating pool with:', { year, shipIds });
 
       const pool = await createPool.execute(parseInt(year), shipIds);
       
+      console.log('Pool created successfully:', pool);
+
       res.json({
         id: pool.id,
         year: pool.year,
@@ -26,6 +29,7 @@ export class PoolController {
         poolTotal: pool.getPoolTotal()
       });
     } catch (error) {
+      console.error('Pool creation error:', error);
       res.status(500).json({ error: 'Failed to create pool' });
     }
   }

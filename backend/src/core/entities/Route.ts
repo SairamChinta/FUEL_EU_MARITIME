@@ -26,4 +26,18 @@ export class Route {
   setAsBaseline() {
     this.props.isBaseline = true;
   }
+
+  toJSON() {
+    return {
+      routeId: this.routeId,
+      vesselType: this.vesselType,
+      fuelType: this.fuelType,
+      year: this.year,
+      ghgIntensity: this.ghgIntensity,
+      fuelConsumption: this.fuelConsumption,
+      distance: this.distance,
+      totalEmissions: this.totalEmissions,
+      isBaseline: this.isBaseline
+    };
+  }
 }
