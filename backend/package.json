@@ -1,6 +1,6 @@
 {
   "name": "fuel-eu-backend",
-  "version": "1.0.0", 
+  "version": "1.0.0",
   "type": "commonjs",
   "scripts": {
     "dev": "tsx watch src/server.ts",
@@ -28,6 +28,7 @@
     "@types/express": "^4.17.21",
     "@types/node": "^20.19.25",
     "prisma": "^5.7.0",
+    "supertest": "^6.3.4",
     "ts-node": "^10.9.2",
     "tsx": "^4.6.2",
     "typescript": "^5.3.2",

@@ -38,4 +38,34 @@ export class ComplianceController {
       res.status(500).json({ error: 'Failed to calculate compliance balance' });
     }
   }
+
+  // Alias endpoint for assignment: GET /compliance/cb?shipId&year
+  static async getCB(req: Request, res: Response) {
+    // call calculateCompliance directly to avoid losing `this` when used as an express handler
+    return ComplianceController.calculateCompliance(req, res);
+  }
+
+  static async adjustedCB(req: Request, res: Response) {
+    try {
+      const { shipId, year } = req.query;
+      if (!shipId || !year) {
+        return res.status(400).json({ error: 'shipId and year are required' });
+      }
+
+      const parsedYear = parseInt(year as string);
+
+      const adjusted = await complianceRepository.getAdjustedComplianceBalance(shipId as string, parsedYear);
+
+      res.json({
+        shipId: adjusted.shipId,
+        year: adjusted.year,
+        cbGCO2eq: adjusted.cbGCO2eq,
+        isSurplus: adjusted.isSurplus,
+        isDeficit: adjusted.isDeficit
+      });
+    } catch (error) {
+      console.error('Adjusted CB error:', error);
+      res.status(500).json({ error: 'Failed to get adjusted compliance balance' });
+    }
+  }
 }

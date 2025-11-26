@@ -6,7 +6,8 @@ const API_BASE_URL = 'http://localhost:3001'
 
 export const httpClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 10000,
+  // Increase timeout to handle slower local backends and DB operations
+  timeout: 20000,
   headers: {
     'Content-Type': 'application/json',
   },

@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { FaShip, FaChartBar, FaPiggyBank, FaHandsHelping } from 'react-icons/fa';
 import { cn } from '../../utils/cn';
 
 interface DashboardLayoutProps {
@@ -9,10 +10,10 @@ interface DashboardLayoutProps {
 }
 
 const tabs = [
-  { id: 'routes', label: 'Routes', icon: '🛳️' },
-  { id: 'compare', label: 'Compare', icon: '📊' },
-  { id: 'banking', label: 'Banking', icon: '🏦' },
-  { id: 'pooling', label: 'Pooling', icon: '🤝' },
+  { id: 'routes', label: 'Routes', icon: <FaShip /> },
+  { id: 'compare', label: 'Compare', icon: <FaChartBar /> },
+  { id: 'banking', label: 'Banking', icon: <FaPiggyBank /> },
+  { id: 'pooling', label: 'Pooling', icon: <FaHandsHelping /> },
 ];
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
@@ -27,8 +28,8 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 bg-maritime-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-sm">FE</span>
+              <div className="w-9 h-9 bg-maritime-600 rounded-lg flex items-center justify-center shadow-md">
+                <FaShip className="text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-gray-900">

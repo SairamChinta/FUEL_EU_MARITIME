@@ -18,13 +18,21 @@ app.get('/health', (req, res) => {
 app.get('/routes', RouteController.getRoutes);
 app.post('/routes/:routeId/baseline', RouteController.setBaseline);
 app.get('/compliance/calculate', ComplianceController.calculateCompliance);
+app.get('/compliance/cb', ComplianceController.getCB);
+app.get('/compliance/adjusted-cb', ComplianceController.adjustedCB);
 app.get('/routes/comparison', ComparisonController.getComparison);
 app.post('/banking/bank', BankingController.bankSurplus);
 app.get('/banking/records', BankingController.getBankRecords);
+app.post('/banking/apply', BankingController.applyBanked);
 app.post('/pools', PoolController.createPool);
 
 const PORT = process.env.PORT || 3001;
 
-app.listen(PORT, () => {
-  console.log(` Server running on port ${PORT}`);
-});
+// Export the app for tests (supertest) and only start listening in non-test environments
+if (process.env.NODE_ENV !== 'test') {
+  app.listen(PORT, () => {
+    console.log(` Server running on port ${PORT}`);
+  });
+}
+
+export { app };

@@ -43,3 +43,17 @@ export const useCreatePool = () => {
     },
   });
 };
+
+export const useApplyBank = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ fromShipId, toShipId, year, amount }: { fromShipId: string; toShipId: string; year: number; amount: number }) =>
+      getComplianceService().applyBank(fromShipId, toShipId, year, amount),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['compliance', variables.toShipId, variables.year] });
+      queryClient.invalidateQueries({ queryKey: ['bankRecords', variables.fromShipId, variables.year] });
+      queryClient.invalidateQueries({ queryKey: ['bankRecords', variables.toShipId, variables.year] });
+    }
+  });
+};

@@ -8,14 +8,14 @@ export const useRoutes = (filters?: { vesselType?: string; fuelType?: string; ye
     queryKey: ['routes', filters],
     queryFn: async () => {
       try {
-        console.log('🔄 useRoutes: Starting API call');
+        console.log('useRoutes: Starting API call');
         const service = getRouteService();
-        console.log('✅ useRoutes: Service instance created');
+        console.log('useRoutes: Service instance created');
         const result = await service.getRoutes(filters);
-        console.log('✅ useRoutes: Data received', result.length, 'routes');
+        console.log('useRoutes: Data received', result.length, 'routes');
         return result;
       } catch (error) {
-        console.error('❌ useRoutes: Error in queryFn', error);
+        console.error('useRoutes: Error in queryFn', error);
         throw error;
       }
     },

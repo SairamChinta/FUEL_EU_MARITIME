@@ -44,4 +44,31 @@ export class PrismaBankingRepository implements BankingRepository {
       createdAt: record.createdAt
     }));
   }
+
+  async applyBanked(fromShipId: string, toShipId: string, year: number, amount: number): Promise<{ applied: number; fromNewBalance: number; toNewBalance: number }> {
+    // Validate available banked amount for source
+    const available = await this.getBankedAmount(fromShipId, year);
+    if (amount > available) {
+      throw new Error('Amount exceeds available banked surplus');
+    }
+
+    // Create a negative bank entry for the source to reduce its bank
+    await prisma.bankEntry.create({
+      data: { shipId: fromShipId, year, amountGCO2eq: -Math.abs(amount) }
+    });
+
+    // Create a positive bank entry for the target so it benefits from the applied amount
+    await prisma.bankEntry.create({
+      data: { shipId: toShipId, year, amountGCO2eq: Math.abs(amount) }
+    });
+
+    const fromNew = await this.getBankedAmount(fromShipId, year);
+    const toNew = await this.getBankedAmount(toShipId, year);
+
+    return {
+      applied: amount,
+      fromNewBalance: fromNew,
+      toNewBalance: toNew
+    };
+  }
 }

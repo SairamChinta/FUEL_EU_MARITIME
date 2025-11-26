@@ -6,6 +6,7 @@ import { RouteFilters } from '../components/Routes/RouteFilters';
 import { useRoutes, useSetBaseline } from '../hooks/useRoutes';
 import { RouteFilters as Filters } from '../core/entities/Route';
 import { Button } from '../components/Button';
+import { FiAlertCircle } from 'react-icons/fi';
 import { LoadingSpinner } from '../components/LoadingSpinner';
 
 export const RoutesTab: React.FC = () => {
@@ -18,7 +19,7 @@ export const RoutesTab: React.FC = () => {
   // Log the exact error details
   useEffect(() => {
     if (error) {
-      console.error('❌ Routes Error Details:', error);
+      console.error('Routes Error Details:', error);
     }
   }, [error]);
 
@@ -48,7 +49,7 @@ export const RoutesTab: React.FC = () => {
         <Card>
           <CardContent>
             <div className="text-center py-8">
-              <div className="text-4xl mb-4">❌</div>
+              <div className="text-4xl mb-4 text-red-500"><FiAlertCircle /></div>
               <h3 className="text-lg font-medium text-gray-900 mb-2">
                 Failed to Load Routes
               </h3>
